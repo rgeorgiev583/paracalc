@@ -48,7 +48,7 @@ TOKEN_CHAR([[OVER]])
     flex_token->token = UINT;
     num = (unsigned long int*) malloc(sizeof(unsigned long int));
     *num = strtoul(yytext, NULL, 10);
-    if (*num == ULONG_MAX && errno == ERANGE || *num == 0 && errno == EINVAL) {
+    if ((*num == ULONG_MAX && errno == ERANGE) || (*num == 0 && errno == EINVAL)) {
        /* Could not convert. */
        return __ERROR;
     }
