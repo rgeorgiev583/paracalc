@@ -1,9 +1,8 @@
-%nonterminal stmt
 %nonterminal expr
 %nonterminal term
 %nonterminal factor
 
-%axiom stmt
+%axiom expr
 
 %terminal LPAR
 %terminal RPAR
@@ -14,11 +13,6 @@
 %terminal UINT
 
 %%
-
-stmt:
-    expr               { printf("%d\n", $1); }
-    | /* nothing */
-    ;
 
 expr:
     term
