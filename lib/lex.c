@@ -8,6 +8,8 @@ void compute_alloc_realloc_size(FILE *input_file, uint32_t *alloc_size, uint32_t
   fseek(input_file, 0, SEEK_END);
   *alloc_size = ((float) ftell(input_file)) / __TOKEN_SIZE;
   *realloc_size = *alloc_size/10;
+  if (*realloc_size == 0)
+      *realloc_size = 1;
   fseek(input_file, 0, SEEK_SET);
 }
 
