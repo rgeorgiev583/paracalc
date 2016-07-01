@@ -12,14 +12,14 @@ typedef struct vect_stack {
   uint32_t ceil;
 } vect_stack;
 
-static void init_vect_stack(vect_stack *stack, uint32_t vect_stack_alloc_size)
+inline static void init_vect_stack(vect_stack *stack, uint32_t vect_stack_alloc_size)
 {
   stack->vect_stack = (token_node**) calloc(vect_stack_alloc_size,sizeof(token_node*));
   stack->ceil = vect_stack_alloc_size;
   stack->top_of_stack = 0;
 }
 
-inline static void vect_stack_push(vect_stack *stack, token_node *token, 
+inline static token_node *vect_stack_push(vect_stack *stack, token_node *token, 
 						 uint32_t vect_stack_realloc_size)
 {
   if (stack->top_of_stack >= stack->ceil) {
@@ -29,6 +29,8 @@ inline static void vect_stack_push(vect_stack *stack, token_node *token,
   }
   stack->vect_stack[stack->top_of_stack] = token;
   stack->top_of_stack=(stack->top_of_stack)+1;
+
+  return token;
 }
 
 inline static token_node *vect_stack_pop(vect_stack *stack)

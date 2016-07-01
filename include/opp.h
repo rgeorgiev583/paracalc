@@ -9,6 +9,7 @@
 
 #include "debug_functions.h"
 #include "token_node.h"
+#include "token_node_stack.h"
 #include "grammar.h"
 
 #include "lex.h"
