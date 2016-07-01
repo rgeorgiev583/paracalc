@@ -26,7 +26,7 @@ void perform_lexing(int32_t lex_thread_max_num, char *file_name, parsing_ctx *ct
   //Empty input file
   if(file_length == 0) {
     fprintf(stdout, "Input file is empty. Exit.\n");
-    fclose(f); 
+    fclose(f);
     exit(1);
   }
 
@@ -38,19 +38,19 @@ void perform_lexing(int32_t lex_thread_max_num, char *file_name, parsing_ctx *ct
     lex_thread_max_num = max_num_chunk;
   }
 
-  int32_t * cut_points = (int32_t *) malloc(sizeof(int32_t)*lex_thread_max_num); 
+  int32_t * cut_points = (int32_t *) malloc(sizeof(int32_t)*lex_thread_max_num);
   if (cut_points == NULL) {
     DEBUG_STDOUT_PRINT("ERROR> could not complete malloc cut_points. Aborting.\n");
     exit(1);
   }
-  
+
   for (i=0; i<lex_thread_max_num; i++)
     cut_points[i] = i* (file_length / lex_thread_max_num);
- 
+
   lex_thread_num = find_cut_points(f, file_length, &cut_points, lex_thread_max_num);
 
   DEBUG_STDOUT_PRINT("lex_thread_num = %d\n", lex_thread_num)
-  
+
   for (i=0; i<lex_thread_num; i++)
     DEBUG_STDOUT_PRINT("cut_points number %d is %d\n", i, cut_points[i]);
 
@@ -102,7 +102,7 @@ void perform_lexing(int32_t lex_thread_max_num, char *file_name, parsing_ctx *ct
     fprintf(stdout, "Input file does not comply with the lexical grammar. Exit.\n");
     DEBUG_STDOUT_PRINT("OPP> Freeing threads.\n")
     free(lex_threads);
-    fclose(f); 
+    fclose(f);
     exit(1);
   }
 
@@ -111,7 +111,7 @@ void perform_lexing(int32_t lex_thread_max_num, char *file_name, parsing_ctx *ct
 
   /* Free threads*/
   DEBUG_STDOUT_PRINT("OPP> Freeing threads.\n")
-  free(lex_threads); 
+  free(lex_threads);
 
   fclose(f);
 
@@ -126,7 +126,7 @@ void perform_lexing(int32_t lex_thread_max_num, char *file_name, parsing_ctx *ct
   token_node * temp = ctx->token_list;
   for(i = 0; i<ctx->token_list_length; i++)
   {
-    if (temp->token == NUMBER)
+    if (temp->token == UINT)
       DEBUG_STDOUT_PRINT("token number %d is %s = %x with semantic_value = %d\n", i, gr_token_to_string(temp->token), temp->token, *((uint32_t*)temp->value))
     else
       DEBUG_STDOUT_PRINT("token number %d is %s = %x with semantic_value = %c\n", i, gr_token_to_string(temp->token), temp->token, *((char*)temp->value))
@@ -134,6 +134,6 @@ void perform_lexing(int32_t lex_thread_max_num, char *file_name, parsing_ctx *ct
   }
   #endif
 
-  
+
 
 }
