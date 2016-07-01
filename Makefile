@@ -40,6 +40,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
+	@rm -f $(BINDIR)/DEBUG
 	@rm -f $(BINDIR)/$(NAME)
 	@rm -f $(OBJDIR)/*.o
 	@rm -f $(FOUT)
