@@ -1,26 +1,13 @@
 changequote(`[[', `]]')dnl
 define([[TOKEN_CHAR]], [[<INITIAL>{$1} {
     flex_token->token = $1;
-    ch = (char*) malloc(sizeof(char));
-    *ch = '$2';
-    flex_token->semantic_value = (void*) ch;
+    flex_token->semantic_value = NULL;
     return __LEX_CORRECT;
 }]])dnl
 dnl
 %option noyywrap
-%option noinput
 %option nounput
-
-LPAR     \(
-RPAR     \)
-PLUS     \+
-MINUS     -
-TIMES    \*
-OVER     \/
-UINT     0|[1-9][0-9]*
-SPACE    [ \t\n]
-
-%%
+%option noinput
 
 %{
     #include <stdlib.h>
@@ -36,9 +23,19 @@ SPACE    [ \t\n]
     };
 
     extern struct lex_token* flex_token;
-    char *ch;
-    uint32_t *num;
+    unsigned long int* num;
 %}
+
+LPAR     \(
+RPAR     \)
+PLUS     \+
+MINUS     -
+TIMES    \*
+OVER     \/
+UINT     0|[1-9][0-9]*
+SPACE    [ \t\n]
+
+%%
 
 TOKEN_CHAR([[LPAR]],  [[(]])
 TOKEN_CHAR([[RPAR]],  [[)]])
