@@ -1,6 +1,5 @@
 changequote(`[[', `]]')dnl
-define([[TOKEN_CHAR]], [[<INITIAL>{$1}
-{
+define([[TOKEN_CHAR]], [[<INITIAL>{$1} {
     flex_token->token = $1;
     ch = (char*) malloc(sizeof(char));
     *ch = '$2';
