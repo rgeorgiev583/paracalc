@@ -30,5 +30,3 @@ factor:
     UINT
     | LPAR expr RPAR       { }
     ;
-
-%%
