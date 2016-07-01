@@ -53,7 +53,7 @@ void print_token_node_tree(parsing_ctx *ctx, uint32_t level, token_node *tree);
   uint32_t itr, offset; \
   uint32_t *ptr, *end; \
   fprintf(stdout, "Rewrite array:\n"); \
-  for (itr = 0; itr < NTERM_LEN; ++itr) { \
+  for (itr = 0; itr < __NTERM_LEN; ++itr) { \
     fprintf(stdout, "Rewrite(%s) = {", (ctx)->gr_token_name[token_value(gr_nterm_token(itr))]); \
     offset = (ctx)->rewrite[itr]; \
     ptr = &(ctx)->rewrite[offset]; \
