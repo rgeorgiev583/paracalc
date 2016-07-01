@@ -6,8 +6,19 @@ define([[TOKEN_CHAR]], [[<INITIAL>{$1} {
 }]])dnl
 dnl
 %option noyywrap
-%option nounput
 %option noinput
+%option nounput
+
+LPAR     \(
+RPAR     \)
+PLUS     \+
+MINUS     -
+TIMES    \*
+OVER     \/
+UINT     0|[1-9][0-9]*
+SPACE    [ \t\n]
+
+%%
 
 %{
     #include <stdlib.h>
@@ -25,17 +36,6 @@ dnl
     extern struct lex_token* flex_token;
     unsigned long int* num;
 %}
-
-LPAR     \(
-RPAR     \)
-PLUS     \+
-MINUS     -
-TIMES    \*
-OVER     \/
-UINT     0|[1-9][0-9]*
-SPACE    [ \t\n]
-
-%%
 
 TOKEN_CHAR([[LPAR]])
 TOKEN_CHAR([[RPAR]])
