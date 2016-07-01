@@ -15,19 +15,20 @@ ifneq ($(strip $(DEBUG)),)
 endif
 LDFLAGS := -lrt -lpthread
 
+GENINC := $(INCDIR)/config.h $(INCDIR)/equivalence_matrix.h $(INCDIR)/grammar.h $(INCDIR)/grammar_semantics.h $(INCDIR)/grammar_tokens.h $(INCDIR)/matrix.h $(INCDIR)/reduction_tree.h $(INCDIR)/rewrite_rules.h
+GENSRC := $(SRCDIR)/grammar.c $(SRCDIR)/grammar_semantics.c
+GENOBJ := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(GENSRC))
 FLEX := $(LEXDIR)/$(NAME).l
 FOUT := $(LEXDIR)/flex.yy.c
 FOBJ := $(patsubst $(LEXDIR)/%.c, $(OBJDIR)/%.o, $(FOUT))
 SRC := $(wildcard $(SRCDIR)/*.c)
 OBJ := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
 
-GENERATED_FILES := include/config.h include/rewrite_rules.h include/reduction_tree.h include/grammar_tokens.h include/grammar_semantics.h lib/grammar_semantics.c include/grammar.h lib/grammar.c include/matrix.h include/equivalence_matrix.h
-
 .PHONY: all gen clean clean-gen wipe
 
-all: gen $(FOBJ) $(OBJ)
+all: gen $(GENSRC) $(FOBJ) $(GENOBJ) $(OBJ)
 	[ -d $(BINDIR) ] || mkdir $(BINDIR)
-	$(CC) $(LDFLAGS) $(FOBJ) $(OBJ) -o $(BINDIR)/$(NAME)
+	$(CC) $(LDFLAGS) $(FOBJ) $(GENOBJ) $(OBJ) -o $(BINDIR)/$(NAME)
 
 gen: $(GENDIR)/parsergen
 	$(GENDIR)/parsergen -i $(PARDIR)/$(NAME).g --out_header $(INCDIR)/ --out_core $(SRCDIR)/
@@ -55,6 +56,7 @@ clean:
 	@rm -f $(FLEX)
 
 clean-gen:
-	@rm -f $(GENERATED_FILES)
+	@rm -f $(GENSRC)
+	@rm -f $(GENINC)
 
 wipe: clean clean-gen
