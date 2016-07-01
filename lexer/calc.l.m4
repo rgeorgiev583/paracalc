@@ -37,12 +37,12 @@ SPACE    [ \t\n]
 
 %%
 
-TOKEN_CHAR([[LPAR]],  [[(]])
-TOKEN_CHAR([[RPAR]],  [[)]])
-TOKEN_CHAR([[PLUS]],  [[+]])
-TOKEN_CHAR([[MINUS]], [[-]])
-TOKEN_CHAR([[TIMES]], [[*]])
-TOKEN_CHAR([[OVER]],  [[/]])
+TOKEN_CHAR([[LPAR]])
+TOKEN_CHAR([[RPAR]])
+TOKEN_CHAR([[PLUS]])
+TOKEN_CHAR([[MINUS]])
+TOKEN_CHAR([[TIMES]])
+TOKEN_CHAR([[OVER]])
 
 <INITIAL>{UINT} {
     flex_token->token = UINT;
