@@ -7,6 +7,7 @@ CFLAGS := -D__DEBUG -g -O3 -pipe -UDEBUG -Wall $(INCLUDES)
 SRCDIR := lib
 SRC := $(wildcard $(SRCDIR)/*.c)
 ODIR := obj
+BINDIR := bin
 
 FOUT := lexer/flex.yy.c
 FOBJ := $(ODIR)/flex.yy.o
@@ -16,7 +17,8 @@ FLEX := lexer/calc.l
 GENERATED_FILES = include/rewrite_rules.h include/reduction_tree.h include/grammar_tokens.h include/grammar_semantics.h lib/grammar_semantics.c include/grammar.h lib/grammar.c include/matrix.h include/config.h include/equivalence_matrix.h
 
 all: $(FOBJ) $(OBJ)
-	@gcc $(LFLAGS) $(OBJ) $(FOBJ) -o bin/calc
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	@gcc $(LFLAGS) $(OBJ) $(FOBJ) -o $(BINDIR)/calc
 
 $(FOBJ): $(FOUT)
 	[ -d $(ODIR) ] || mkdir $(ODIR)
@@ -37,7 +39,7 @@ clean:
 	@rm -f $(FOUT)
 	@rm -f $(patsubst %.c, %.h, $(FOUT))
 	@rm -f $(ODIR)/*.o
-	@rm -f bin/expr_parser
+	@rm -f $(BINDIR)/expr_parser
 
 clean-gen:
 	@rm $(GENERATED_FILES)
