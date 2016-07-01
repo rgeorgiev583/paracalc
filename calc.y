@@ -1,12 +1,17 @@
-%{
-    #include <stdio.h>
-    int yylex(void);
-    void yyerror(char*);
-%}
+%nonterminal stmt
+%nonterminal expr
+%nonterminal term
+%nonterminal factor
 
-%token INTEGER
-%left '+' '-'
-%left '*' '/'
+%axiom stmt
+
+%terminal LPAR
+%terminal RPAR
+%terminal PLUS
+%terminal MINUS
+%terminal TIMES
+%terminal OVER
+%terminal UINT
 
 %%
 
@@ -17,29 +22,19 @@ stmt:
 
 expr:
     term
-    | expr '+' term    { $$ = $1 + $3; }
-    | expr '-' term    { $$ = $1 - $3; }
+    | expr PLUS term       { }
+    | expr MINUS term      { }
     ;
 
 term:
     factor
-    | term '*' factor  { $$ = $1 * $3; }
-    | term '/' factor  { $$ = $1 / $3; }
+    | term TIMES factor    { }
+    | term OVER factor     { }
     ;
 
 factor:
-    INTEGER
-    | '(' expr ')'     { $$ = $2; }
+    UINT
+    | LPAR expr RPAR       { }
     ;
 
 %%
-
-void yyerror(char *s)
-{
-    fprintf(stderr, "%s\n", s);
-}
-
-int main(void)
-{
-    yyparse();
-}
