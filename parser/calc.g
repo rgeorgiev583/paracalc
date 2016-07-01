@@ -25,18 +25,18 @@ unsigned long int* res;
 %%
 
 expr:
-    term
+    term                   { $$ = $1; }
     | expr PLUS term       { CALCULATE($$,$1,+,$3); }
     | expr MINUS term      { CALCULATE($$,$1,-,$3); }
     ;
 
 term:
-    factor
+    factor                 { $$ = $1; }
     | term TIMES factor    { CALCULATE($$,$1,*,$3); }
     | term OVER factor     { CALCULATE($$,$1,/,$3); }
     ;
 
 factor:
-    UINT
+    UINT                   { $$ = $1; }
     | LPAR expr RPAR       { $$ = $2; }
     ;
