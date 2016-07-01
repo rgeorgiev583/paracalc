@@ -28,6 +28,5 @@
 *.x86_64
 *.hex
 
-# Debug files
-*.dSYM/
-*.su
+#Python Bytecode
+*.pyc
