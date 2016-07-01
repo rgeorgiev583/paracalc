@@ -16,7 +16,7 @@ RPAR     \)
 PLUS     \+
 MINUS     -
 TIMES    \*
-OVER      /
+OVER     \/
 UINT     0|[1-9][0-9]*
 SPACE    [ \t\n]
 
