@@ -76,7 +76,7 @@ void perform_lexing(char *file_name, parsing_ctx *ctx)
   token_node * temp = ctx->token_list;
   for(i = 0; i<ctx->token_list_length; i++)
   {
-    if (temp->token == NUMBER)
+    if (temp->token == UINT)
       DEBUG_STDOUT_PRINT("token number %d is %s = %x with semantic_value = %d\n", i, gr_token_to_string(temp->token), temp->token, *((uint32_t*)temp->value))
     else
       DEBUG_STDOUT_PRINT("token number %d is %s = %x with semantic_value = %c\n", i, gr_token_to_string(temp->token), temp->token, *((char*)temp->value))
