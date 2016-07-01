@@ -14,7 +14,7 @@ FOBJ := $(ODIR)/flex.yy.o
 OBJ := $(patsubst $(SRCDIR)/%.c, $(ODIR)/%.o, $(SRC))
 
 FLEX := lexer/calc.l
-GENERATED_FILES = include/rewrite_rules.h include/reduction_tree.h include/grammar_tokens.h include/grammar_semantics.h lib/grammar_semantics.c include/grammar.h lib/grammar.c include/matrix.h include/equivalence_matrix.h
+GENERATED_FILES = include/config.h include/rewrite_rules.h include/reduction_tree.h include/grammar_tokens.h include/grammar_semantics.h lib/grammar_semantics.c include/grammar.h lib/grammar.c include/matrix.h include/equivalence_matrix.h
 
 all: $(FOBJ) $(OBJ)
 	[ -d $(BINDIR) ] || mkdir $(BINDIR)
