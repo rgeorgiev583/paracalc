@@ -1,9 +1,9 @@
 CC := clang
-LFLAGS = -lrt -pthread
+LFLAGS = -lrt -lpthread
 #for MacOSX: LFLAGS = -lpthread
 INCLUDES := -I./include -I./lexer
-CFLAGS := -D__DEBUG -g -O3 -pipe -UDEBUG -Wall $(INCLUDES)
-#CFLAGS := -O3 -pipe -pthread -Wall $(INCLUDES)
+CFLAGS := -D__DEBUG -g -UDEBUG -Wall $(INCLUDES)
+#CFLAGS := -O3 -pipe -lpthread -Wall $(INCLUDES)
 SRCDIR := lib
 SRC := $(wildcard $(SRCDIR)/*.c)
 ODIR := obj
@@ -14,7 +14,7 @@ FOBJ := $(ODIR)/flex.yy.o
 OBJ := $(patsubst $(SRCDIR)/%.c, $(ODIR)/%.o, $(SRC))
 
 FLEX := lexer/calc.l
-GENERATED_FILES = include/rewrite_rules.h include/reduction_tree.h include/grammar_tokens.h include/grammar_semantics.h lib/grammar_semantics.c include/grammar.h lib/grammar.c include/matrix.h include/config.h include/equivalence_matrix.h
+GENERATED_FILES = include/rewrite_rules.h include/reduction_tree.h include/grammar_tokens.h include/grammar_semantics.h lib/grammar_semantics.c include/grammar.h lib/grammar.c include/matrix.h include/equivalence_matrix.h
 
 all: $(FOBJ) $(OBJ)
 	[ -d $(BINDIR) ] || mkdir $(BINDIR)
