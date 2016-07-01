@@ -37,7 +37,7 @@ $(FOBJ): $(FOUT)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(FOUT): $(FLEX)
-	flex --header-file=lexer/flex.yy.h $< -o $@
+	flex --header-file=lexer/flex.yy.h -o $@ $<
 
 $(FLEX): $(FLEX).m4
 	m4 $< > $@
