@@ -1,5 +1,4 @@
 LFLAGS = -lrt -lpthread
-#for MacOSX: LFLAGS = -lpthread
 INCLUDES := -I./include -I./lexer
 CFLAGS := -O3 -march=native -pipe -pthread -UDEBUG -Wall $(INCLUDES)
 ifneq ($(strip $(DEBUG)),)
