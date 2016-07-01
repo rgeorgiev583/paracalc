@@ -9,8 +9,11 @@
 
 #include "debug_functions.h"
 #include "token_node.h"
+#include "token_node_stack.h"
 #include "reduction_list.h"
 #include "grammar.h"
+
+#include "par_lex.h"
 
 #include "grammar_tokens.h"
 #include "parsing_context.h"
