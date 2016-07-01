@@ -1,8 +1,10 @@
 NAME := paracalc
 
 LEXDIR := lexer
+PARDIR := parser
 INCDIR := include
 SRCDIR := lib
+GENDIR := gen
 OBJDIR := obj
 BINDIR := bin
 
@@ -21,9 +23,14 @@ OBJ := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
 
 GENERATED_FILES := include/config.h include/rewrite_rules.h include/reduction_tree.h include/grammar_tokens.h include/grammar_semantics.h lib/grammar_semantics.c include/grammar.h lib/grammar.c include/matrix.h include/equivalence_matrix.h
 
-all: $(FOBJ) $(OBJ)
+.PHONY: all gen clean clean-gen wipe
+
+all: gen $(FOBJ) $(OBJ)
 	[ -d $(BINDIR) ] || mkdir $(BINDIR)
 	$(CC) $(LDFLAGS) $(FOBJ) $(OBJ) -o $(BINDIR)/$(NAME)
+
+gen: $(GENDIR)/parsergen
+	$(GENDIR)/parsergen -i $(PARDIR)/$(NAME).g --out_header $(INCDIR) --out_core $(SRCDIR)
 
 $(FOBJ): $(FOUT)
 	[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
