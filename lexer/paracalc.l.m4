@@ -22,8 +22,7 @@ SPACE    [ \t\n]
 
 %{
     #include <stdlib.h>
-    #include <limits.h>
-    #include <errno.h>
+    #include <gmp.h>
 
     #include "grammar_tokens.h"
     #include "flex_return_codes.h"
@@ -34,7 +33,7 @@ SPACE    [ \t\n]
     };
 
     extern struct lex_token* flex_token;
-    unsigned long int* num;
+    mpz_t num;
 %}
 
 TOKEN_CHAR([[LPAR]])
@@ -46,9 +45,7 @@ TOKEN_CHAR([[OVER]])
 
 <INITIAL>{UINT} {
     flex_token->token = UINT;
-    num = (unsigned long int*) malloc(sizeof(unsigned long int));
-    *num = strtoul(yytext, NULL, 10);
-    if ((*num == ULONG_MAX && errno == ERANGE) || (*num == 0 && errno == EINVAL)) {
+    if (mpz_init_set_str(num, yytext, 10) == -1) {
        /* Could not convert. */
        return __ERROR;
     }
