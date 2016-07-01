@@ -1,15 +1,33 @@
 changequote(`[[', `]]')dnl
 define([[TOKEN_CHAR]], [[<INITIAL>{$1} {
     flex_token->token = $1;
-    ch = (char*) malloc(sizeof(char));
-    *ch = '$2';
-    flex_token->semantic_value = (void*) ch;
+    char ch = '$2';
+    flex_token->semantic_value = push_sem_value_on_stack(flex_token->stack_char, (void *)&ch, flex_token->realloc_size, 0);
+    if(flex_token->num_chars >= flex_token->chunk_length)
+        flex_token->chunk_ended = 1;
     return __LEX_CORRECT;
 }]])dnl
 dnl
 %option noyywrap
 %option noinput
 %option nounput
+%option reentrant
+
+%{
+    #include <stdlib.h>
+    #include <limits.h>
+    #include <errno.h>
+
+    #include "grammar_tokens.h"
+    #include "flex_return_codes.h"
+    #include "flex_token.h"
+    #include "sem_value_stack.h"
+
+    char *ch;
+    uint32_t *num;
+%}
+
+%option extra-type="struct lex_token *"
 
 LPAR     \(
 RPAR     \)
@@ -23,21 +41,7 @@ SPACE    [ \t\n]
 %%
 
 %{
-    #include <stdlib.h>
-    #include <limits.h>
-    #include <errno.h>
-
-    #include "grammar_tokens.h"
-    #include "flex_return_codes.h"
-
-    struct lex_token {
-        gr_token token;
-        void* semantic_value;
-    };
-
-    extern struct lex_token* flex_token;
-    char *ch;
-    uint32_t *num;
+struct lex_token * flex_token = yyextra;
 %}
 
 TOKEN_CHAR([[LPAR]],  [[(]])
@@ -49,17 +53,21 @@ TOKEN_CHAR([[OVER]],  [[/]])
 
 <INITIAL>{UINT} {
     flex_token->token = UINT;
-    num = (unsigned long int*) malloc(sizeof(unsigned long int));
-    *num = strtoul(yytext, NULL, 10);
-    if (*num == ULONG_MAX && errno == ERANGE || *num == 0 && errno == EINVAL) {
+    unsigned long int num = strtoul(yytext, NULL, 10);
+    if ((num == ULONG_MAX && errno == ERANGE) || (num == 0 && errno == EINVAL)) {
        /* Could not convert. */
        return __ERROR;
     }
-    flex_token->semantic_value = (void*) num;
+    flex_token->semantic_value = push_sem_value_on_stack(flex_token->stack_int, (void *)&num, flex_token->realloc_size, 1);
     return __LEX_CORRECT;
 }
 
-<INITIAL>{SPACE} ; /* skip whitespace */
+<INITIAL>{SPACE} {
+    /* skip whitespace */
+    if(flex_token->num_chars >= flex_token->chunk_length)
+        return __END_OF_CHUNK;
+}
+
 <INITIAL>. { return __ERROR; }
 
 %%
