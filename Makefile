@@ -1,6 +1,6 @@
 LFLAGS = -lrt -lpthread
 INCLUDES := -I./include -I./lexer
-CFLAGS := -O3 -march=native -pipe -pthread -UDEBUG -Wall $(INCLUDES)
+CFLAGS := -O3 -pipe -UDEBUG -Wall $(INCLUDES)
 ifneq ($(strip $(DEBUG)),)
 	CFLAGS += -D__DEBUG -g
 endif
