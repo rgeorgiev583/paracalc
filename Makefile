@@ -2,7 +2,10 @@ CC := clang
 LFLAGS = -lrt -lpthread
 #for MacOSX: LFLAGS = -lpthread
 INCLUDES := -I./include -I./lexer
-CFLAGS := -D__DEBUG -g -O3 -march=native -pipe -pthread -UDEBUG -Wall $(INCLUDES)
+CFLAGS := -O3 -march=native -pipe -pthread -UDEBUG -Wall $(INCLUDES)
+ifneq ($(strip $(DEBUG)),)
+	CFLAGS += -D__DEBUG -g
+endif
 #CFLAGS := -O3 -pipe -lpthread -Wall $(INCLUDES)
 SRCDIR := lib
 SRC := $(wildcard $(SRCDIR)/*.c)
