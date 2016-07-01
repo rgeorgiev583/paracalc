@@ -1,4 +1,3 @@
-CC := clang
 LFLAGS = -lrt -lpthread
 #for MacOSX: LFLAGS = -lpthread
 INCLUDES := -I./include -I./lexer
@@ -21,7 +20,7 @@ GENERATED_FILES = include/config.h include/rewrite_rules.h include/reduction_tre
 
 all: $(FOBJ) $(OBJ)
 	[ -d $(BINDIR) ] || mkdir $(BINDIR)
-	@gcc $(LFLAGS) $(OBJ) $(FOBJ) -o $(BINDIR)/calc
+	$(CC) $(LFLAGS) $(OBJ) $(FOBJ) -o $(BINDIR)/calc
 
 $(FOBJ): $(FOUT)
 	[ -d $(ODIR) ] || mkdir $(ODIR)
