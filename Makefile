@@ -30,7 +30,7 @@ all: gen $(FOBJ) $(OBJ)
 	$(CC) $(LDFLAGS) $(FOBJ) $(OBJ) -o $(BINDIR)/$(NAME)
 
 gen: $(GENDIR)/parsergen
-	$(GENDIR)/parsergen -i $(PARDIR)/$(NAME).g --out_header $(INCDIR) --out_core $(SRCDIR)
+	$(GENDIR)/parsergen -i $(PARDIR)/$(NAME).g --out_header $(INCDIR)/ --out_core $(SRCDIR)/
 
 $(FOBJ): $(FOUT)
 	[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
