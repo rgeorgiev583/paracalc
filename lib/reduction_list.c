@@ -6,7 +6,9 @@
 
 void init_reduction_list(reduction_list *list)
 {
-    list->list = (uint32_t*) malloc(sizeof(uint32_t)*__LIST_ALLOC_SIZE);
+    void* baseptr;
+    posix_memalign(&baseptr,__CACHE_LINE_SIZE,sizeof(uint32_t)*__LIST_ALLOC_SIZE);
+    list->list = (uint32_t*) baseptr;
     list->ceil = __LIST_ALLOC_SIZE;
     list->idx_last = 0;
 }
