@@ -13,7 +13,7 @@ CFLAGS := -O3 -pipe -UDEBUG -Wall $(INCLUDE)
 ifneq ($(strip $(DEBUG)),)
 	CFLAGS += -D__DEBUG -g
 endif
-LDFLAGS = -lrt -lpthread
+LDFLAGS := -lrt -lpthread
 
 FLEX := $(LEXDIR)/$(NAME).l
 FOUT := $(LEXDIR)/flex.yy.c
