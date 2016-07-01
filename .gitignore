@@ -30,3 +30,9 @@
 
 # Python Bytecode
 *.pyc
+
+# Object files directory
+/obj/
+
+# Binaries directory
+/bin/
