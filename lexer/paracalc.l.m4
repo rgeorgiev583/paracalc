@@ -5,6 +5,11 @@ define([[TOKEN_CHAR]], [[<INITIAL>{$1} {
     return __LEX_CORRECT;
 }]])dnl
 dnl
+%{
+#include <stdlib.h>
+#include <gmp.h>
+%}
+
 %option noyywrap
 %option noinput
 %option nounput
@@ -21,16 +26,13 @@ SPACE    [ \t\n]
 %%
 
 %{
-    #include <stdlib.h>
-    #include <gmp.h>
+#include "grammar_tokens.h"
+#include "flex_return_codes.h"
 
-    #include "grammar_tokens.h"
-    #include "flex_return_codes.h"
-
-    struct lex_token {
-        gr_token token;
-        void* semantic_value;
-    };
+struct lex_token {
+    gr_token token;
+    void* semantic_value;
+};
 
     extern struct lex_token* flex_token;
     mpz_t num;
