@@ -264,6 +264,9 @@ token_node **compute_bounds(uint32_t length, uint8_t n, token_node *token_list)
 
 void *thread_task(void *worker_thread_ctx)
 {
+  struct timespec thread_timer_start, thread_timer_end;
+  double thread_time;
+  portable_clock_gettime(&thread_timer_start);
   thread_context_t *thread_context, *thread_arguments;
   uint32_t parse_result,i;
   uint32_t parent_index;
@@ -316,6 +319,9 @@ void *thread_task(void *worker_thread_ctx)
   } else {
     thread_context->results[thread_context->id] = parse_status;
   }
+  portable_clock_gettime(&thread_timer_end);
+  thread_time = compute_time_interval(&thread_timer_start, &thread_timer_end);
+  VERBOSE_PRINT("Pthread %d> execution time was %lf ms\n", thread_time * 1000);
   pthread_exit(NULL);
 }
 
