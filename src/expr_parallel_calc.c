@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   if (optind == argc - 1) {
     file_name = argv[argc - 1];
   } else {
-    fprintf(stdout, "Parallel Parser\n Usage: %s [-j threads] filename\n", argv[0]);
+    fprintf(stdout, "Parallel Calculator\n Usage: %s [-j threads] filename\n", argv[0]);
     return 0;
   }
   token_node* result = parse(threads,0, file_name);
