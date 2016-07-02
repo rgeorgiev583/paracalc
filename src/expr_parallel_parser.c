@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <gmp.h>
 #include "parser.h"
 
 
@@ -37,7 +38,9 @@ int main(int argc, char **argv)
     return 0;
   }
   token_node* result = parse(threads,0, file_name);
-  printf("Result is: %lu\n", *(unsigned long int*)result->value);
+  printf("Result is: \n");
+  mpz_out_str(stdout, 10, *(mpz_t*) result->value);
+  printf("\n");
 
   return 0;
 }
