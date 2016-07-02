@@ -5,6 +5,8 @@
 #include <gmp.h>
 #include "parser.h"
 
+int quiet = 0;
+
 
 int main(int argc, char **argv)
 {
@@ -15,7 +17,7 @@ int main(int argc, char **argv)
   /* Get input parameters. */
   threads = 1;
   file_name = NULL;
-  c = getopt(argc, argv, ":j:o:");
+  c = getopt(argc, argv, ":j:o:q");
   while (c != -1) {
     switch (c) {
       case 'j':
@@ -26,6 +28,9 @@ int main(int argc, char **argv)
         if (!out)
           fprintf(stderr, "Could not open output file (%s).\n", optarg);
         break;
+      case 'q':
+        quiet = 1;
+        break;
       default:
         if (optopt == 'j' || optopt == 'o')
           fprintf(stdout, "Option -%c requires an argument.\n", optopt);
@@ -35,7 +40,7 @@ int main(int argc, char **argv)
           fprintf(stdout, "Unknown option character `\\x%x'.\n", optopt);
         return 0;
     }
-    c = getopt(argc, argv, ":j:");
+    c = getopt(argc, argv, ":j:o:q");
   }
   if (optind == argc - 1) {
     file_name = argv[argc - 1];
