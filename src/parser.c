@@ -51,7 +51,7 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   pthread_t *thread;
   thread_context_t *contexts;
   struct timespec parse_timer_start, parse_timer_end, lex_timer_start, lex_timer_end;
-  double lexing_time, parsing_time;
+  double lexing_time, parsing_time, total_time;
 #if defined __LOG_RECOMBINATION
   uint32_t j;
 #endif
@@ -219,10 +219,11 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   portable_clock_gettime(&parse_timer_end);
   pretty_print_parse_status(parse_status);
 
-  lexing_time= compute_time_interval(&lex_timer_start, &lex_timer_end);
+  lexing_time=compute_time_interval(&lex_timer_start, &lex_timer_end);
   parsing_time=compute_time_interval(&parse_timer_start, &parse_timer_end);
+  total_time=lexing_time+parsing_time;
 
-  fprintf(stdout, "\nLexer: %lf s\nParser: %lf s ",lexing_time,parsing_time);
+  fprintf(stdout, "\nLexer: %lf ms\nParser: %lf ms\nTotal: %lf ms\n",lexing_time*1000,parsing_time*1000,total_time*1000);
 
   return ctx.token_list;
 }
