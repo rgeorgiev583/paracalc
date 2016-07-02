@@ -11,6 +11,7 @@
 #include "token_node.h"
 
 #ifdef __DEBUG
+#define VERBOSE_PRINT(...) fprintf(stdout, __VA_ARGS__);
 #define DEBUG_PRINT(...) fprintf(stderr, __VA_ARGS__);
 #define DEBUG_STDOUT_PRINT(...) fprintf(stdout, __VA_ARGS__);
 #define PRINT_TOKEN_NODE_FRONTIER(ctx) {\
@@ -73,6 +74,9 @@ void print_token_node_tree(parsing_ctx *ctx, uint32_t level, token_node *tree);
   fprintf(stdout, "\n"); \
 }
 #else
+#ifdef __VERBOSE
+#define VERBOSE_PRINT(...) fprintf(stdout, __VA_ARGS__);
+#endif
 #define DEBUG_PRINT(...)
 #define DEBUG_STDOUT_PRINT(...)
 #define PRINT_TOKEN_NODE_FRONTIER(ctx)

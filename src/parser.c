@@ -86,14 +86,14 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
 #error "Chunk recombination strategy undefined, define it in config.h"
 #endif
   }
-  DEBUG_STDOUT_PRINT("OPP> Num_threads %d\n", num_threads)
+  VERBOSE_PRINT("OPP> Num_threads %d\n", num_threads)
 
   /* Allocate threads. */
   contexts = (thread_context_t *) malloc(sizeof(thread_context_t) * num_threads);
   thread = (pthread_t *) malloc(sizeof(pthread_t)*num_threads);
   results = (uint8_t *) malloc(sizeof(uint8_t)*num_threads);
   if (thread == NULL || contexts == NULL || results == NULL) {
-    DEBUG_STDOUT_PRINT("ERROR> Thread allocation failed\n")
+    VERBOSE_PRINT("ERROR> Thread allocation failed\n")
       return NULL;
   }
 
@@ -102,36 +102,36 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   step_index = 0;
   /* Create initial common threads. */
   for (i = 0; i < threads; ++i) {
-    DEBUG_STDOUT_PRINT("OPP> creating thread %d.\n", i)
+    VERBOSE_PRINT("OPP> creating thread %d.\n", i)
     contexts[i].id = i;
     /* Set list_begin. */
     if (i == 0) {
       contexts[i].list_begin = bounds[i];
-      DEBUG_STDOUT_PRINT("OPP> list begin first thread %s \n", gr_token_to_string(bounds[i]->token));
+      VERBOSE_PRINT("OPP> list begin first thread %s \n", gr_token_to_string(bounds[i]->token));
     } else {
       list_ptr = bounds[i]->next;
       contexts[i].list_begin = list_ptr;
-      DEBUG_STDOUT_PRINT("OPP> list begin thread %d is %s \n", i, gr_token_to_string(list_ptr->token));
+      VERBOSE_PRINT("OPP> list begin thread %d is %s \n", i, gr_token_to_string(list_ptr->token));
     }
     /* Get prev context. */
     if (i == 0) {
       l_token = new_token_node(__TERM, NULL);
-      DEBUG_STDOUT_PRINT("OPP> c_prev context thread %d is __TERM \n", i);
+      VERBOSE_PRINT("OPP> c_prev context thread %d is __TERM \n", i);
     } else {
       list_ptr = bounds[i];
       l_token = new_token_node(list_ptr->token, NULL);
-      DEBUG_STDOUT_PRINT("OPP> c_prev context thread %d is %s \n", i, gr_token_to_string(list_ptr->token));
+      VERBOSE_PRINT("OPP> c_prev context thread %d is %s \n", i, gr_token_to_string(list_ptr->token));
     }
     l_token->next = contexts[i].list_begin;
     contexts[i].c_prev = l_token;
     /* Get next context. */
     if (i == threads - 1) {
       l_token = new_token_node(__TERM, NULL);
-      DEBUG_STDOUT_PRINT("OPP> c_next context thread %d is __TERM \n", i);
+      VERBOSE_PRINT("OPP> c_next context thread %d is __TERM \n", i);
     } else {
       list_ptr = bounds[i + 1]->next;
       l_token = new_token_node(list_ptr->token, NULL);
-      DEBUG_STDOUT_PRINT("OPP> c_next context thread %d is %s \n", i, gr_token_to_string(list_ptr->token));
+      VERBOSE_PRINT("OPP> c_next context thread %d is %s \n", i, gr_token_to_string(list_ptr->token));
     }
     contexts[i].c_next = l_token;
     /* Set list end. */
@@ -145,11 +145,11 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   }
 
   if (threads < num_threads) {
-    DEBUG_STDOUT_PRINT("OPP> creating additional threads, starting from i = %d.\n", i)
+    VERBOSE_PRINT("OPP> creating additional threads, starting from i = %d.\n", i)
     /* Create additional threads depending on mode. */
 #if defined __SINGLE_RECOMBINATION      
       /* Only one iteration. */
-      DEBUG_STDOUT_PRINT("OPP> creating mode ONE thread, i = %d.\n", threads)
+      VERBOSE_PRINT("OPP> creating mode ONE thread, i = %d.\n", threads)
       contexts[threads].id = threads;
       contexts[threads].parents = (int16_t *) malloc(sizeof(int16_t)*threads);
       contexts[threads].c_prev = contexts[0].c_prev;
@@ -166,10 +166,10 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
 #elif defined __LOG_RECOMBINATION
       unsigned int step_first_index = 0;
       step_size /= 2;
-      DEBUG_STDOUT_PRINT("OPP> creating mode LOG threads.\n")
+      VERBOSE_PRINT("OPP> creating mode LOG threads.\n")
       /* Create different iterations. */
       for (; i < num_threads; ++i) {
-        DEBUG_STDOUT_PRINT("OPP> creating thread %d, with step index %d and step size %d.\n", i, step_index, step_size)
+        VERBOSE_PRINT("OPP> creating thread %d, with step index %d and step size %d.\n", i, step_index, step_size)
         contexts[i].id = i;
         contexts[i].c_prev = contexts[step_first_index + step_index*2].c_prev;
         if (step_index == step_size - 1) {
@@ -203,12 +203,12 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   }
 
   /* Wait for last thread to finish. */
-  DEBUG_STDOUT_PRINT("OPP> Waiting for thread %d to finish.\n", num_threads - 1)
+  VERBOSE_PRINT("OPP> Waiting for thread %d to finish.\n", num_threads - 1)
   pthread_join(thread[num_threads - 1], NULL);
   parse_status = results[num_threads - 1];
 
   /* Free threads and arguments. */
-  DEBUG_STDOUT_PRINT("OPP> Freeing threads.\n")
+  VERBOSE_PRINT("OPP> Freeing threads.\n")
   for (i = 0; i < threads; ++i) {
     free(contexts[i].c_prev);
     free(contexts[i].c_next);

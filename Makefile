@@ -13,6 +13,9 @@ CFLAGS := -O3 -pipe -UDEBUG -Wall $(INCLUDE)
 ifneq ($(strip $(DEBUG)),)
 	CFLAGS += -D__DEBUG -g
 endif
+ifeq ($(strip $(SILENT)),)
+	CFLAGS += -D__VERBOSE
+endif
 LDFLAGS := -lrt -lpthread -lgmp
 
 GENINC := $(INCDIR)/config.h $(INCDIR)/equivalence_matrix.h $(INCDIR)/grammar.h $(INCDIR)/grammar_semantics.h $(INCDIR)/grammar_tokens.h $(INCDIR)/matrix.h $(INCDIR)/reduction_tree.h $(INCDIR)/rewrite_rules.h
