@@ -9,19 +9,25 @@
 int main(int argc, char **argv)
 {
   int32_t c, threads;
-  char *file_name;
+  char* file_name;
+  FILE* out = stdout;
 
   /* Get input parameters. */
   threads = 1;
   file_name = NULL;
-  c = getopt(argc, argv, ":j:");
+  c = getopt(argc, argv, ":j:o:");
   while (c != -1) {
     switch (c) {
       case 'j':
         threads = atoi(optarg);
         break;
+      case 'o':
+        out = fopen(optarg, "a");
+        if (!out)
+          fprintf(stderr, "Could not open output file (%s).\n", optarg);
+        break;
       default:
-        if (optopt == 'j')
+        if (optopt == 'j' || optopt == 'o')
           fprintf(stdout, "Option -%c requires an argument.\n", optopt);
         else if (isprint(optopt))
           fprintf(stdout, "Unknown option `-%c'.\n", optopt);
@@ -38,9 +44,15 @@ int main(int argc, char **argv)
     return 0;
   }
   token_node* result = parse(threads,0, file_name);
-  printf("Result is: \n");
-  mpz_out_str(stdout, 10, *(mpz_t*) result->value);
-  printf("\n");
+  if (out == stdout)
+    printf("\nResult is: ");
+  mpz_out_str(out, 10, *(mpz_t*) result->value);
+  fprintf(out, "\n");
+  if (out != stdout)
+  {
+    fclose(out);
+    printf("\n");
+  }
 
   return 0;
 }
