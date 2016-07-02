@@ -1,8 +1,7 @@
 #include <gmp.h>
-mpz_t* res;
 
 #define CALCULATE(lhs, rhs1, op, rhs3) {\
-    res = malloc(sizeof(mpz_t));\
+    mpz_t* res = malloc(sizeof(mpz_t));\
     mpz_init(*res);\
     mpz_##op(*res, *(mpz_t*) rhs1, *(mpz_t*) rhs3);\
     lhs = res;\
