@@ -106,27 +106,200 @@ Paracalc: разпределен калкулатор
 \emph on
 parser
 \emph default
- за прост аритметичен израз, зададен със следната граматика:
+ за прост аритметичен израз, допускащ употребата на скоби, зададен със следната
+ граматика:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Gamma=\left(\varSigma,N,S,P\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N=\{E,T,F\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\varSigma=([$
+\end_inset
+
+0
+\begin_inset Formula $-$
+\end_inset
+
+9
+\begin_inset Formula $],$
+\end_inset
+
++
+\begin_inset Formula $,$
+\end_inset
+
+-
+\begin_inset Formula $,$
+\end_inset
+
+*
+\begin_inset Formula $,$
+\end_inset
+
+/
+\begin_inset Formula $,$
+\end_inset
+
+(
+\begin_inset Formula $,$
+\end_inset
+
+)
+\begin_inset Formula $)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $S=E$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $P=\{E\rightarrow T|E$
+\end_inset
+
++
+\begin_inset Formula $T|E$
+\end_inset
+
+-
+\begin_inset Formula $T,T\rightarrow F|T$
+\end_inset
+
+*
+\begin_inset Formula $F|T$
+\end_inset
+
+/
+\begin_inset Formula $F,F\rightarrow n|$
+\end_inset
+
+(
+\begin_inset Formula $E$
+\end_inset
+
+)
+\begin_inset Formula $\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n=$
+\end_inset
+
+0
+\begin_inset Formula $|[$
+\end_inset
+
+1
+\begin_inset Formula $-$
+\end_inset
+
+9
+\begin_inset Formula $][$
+\end_inset
+
+0
+\begin_inset Formula $-$
+\end_inset
+
+9
+\begin_inset Formula $]*$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+представена по-удобно като:
 \end_layout
 
 \begin_layout Verbatim
 
-Expression = Term | Expression '+' Term | Expression '-' Term
+expression        -> term | expression Plus term | expression Minus term
 \end_layout
 
 \begin_layout Verbatim
 
-Term       = Factor | Term '*' Factor | Term '/' Factor
+term              -> factor | term Times factor | term Over factor
 \end_layout
 
 \begin_layout Verbatim
 
-Factor     = Number | '(' Expression ')'
+factor            -> Number | LeftParenthesis expression RightParenthesis
 \end_layout
 
 \begin_layout Verbatim
 
-Number     = '0' | [1-9] [0-9]*
+Number            -> '0' | [1-9] [0-9]*
+\end_layout
+
+\begin_layout Verbatim
+
+Plus              -> '+'
+\end_layout
+
+\begin_layout Verbatim
+
+Minus             -> '-'
+\end_layout
+
+\begin_layout Verbatim
+
+Times             -> '*'
+\end_layout
+
+\begin_layout Verbatim
+
+Over              -> '/'
+\end_layout
+
+\begin_layout Verbatim
+
+LeftParenthesis   -> '('
+\end_layout
+
+\begin_layout Verbatim
+
+RightParenthesis  -> ')'
+\end_layout
+
+\begin_layout Standard
+Самият 
+\emph on
+parser
+\emph default
+ пресмята стойността на израза рекурсивно като страничен ефект на парсването
+ му.
+ Тъй като по дефиниция числата (т.е.
+ 
+\family typewriter
+Number
+\family default
+ терминалите от граматиката) могат да са само цели положителни, то под операцият
+а 
+\emph on
+делене
+\emph default
+ ще разбираме целочислено делене.
 \end_layout
 
 \end_body
