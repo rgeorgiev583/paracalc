@@ -50,14 +50,11 @@ int main(int argc, char **argv)
   }
   token_node* result = parse(threads,0, file_name);
   if (out == stdout)
-    printf("\nResult is: ");
+    printf("\nResult: ");
   mpz_out_str(out, 10, *(mpz_t*) result->value);
   fprintf(out, "\n");
   if (out != stdout)
-  {
     fclose(out);
-    printf("\n");
-  }
 
   return 0;
 }
