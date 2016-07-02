@@ -34,8 +34,8 @@ struct lex_token {
     void* semantic_value;
 };
 
-    extern struct lex_token* flex_token;
-    mpz_t num;
+extern struct lex_token* flex_token;
+mpz_t* num;
 %}
 
 TOKEN_CHAR([[LPAR]])
@@ -47,11 +47,12 @@ TOKEN_CHAR([[OVER]])
 
 <INITIAL>{UINT} {
     flex_token->token = UINT;
-    if (mpz_init_set_str(num, yytext, 10) == -1) {
+    num = malloc(sizeof(mpz_t));
+    if (mpz_init_set_str(*num, yytext, 10) == -1) {
        /* Could not convert. */
        return __ERROR;
     }
-    flex_token->semantic_value = (void*) num;
+    flex_token->semantic_value = num;
     return __LEX_CORRECT;
 }
 
