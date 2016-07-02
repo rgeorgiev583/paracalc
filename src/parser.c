@@ -35,7 +35,7 @@ void pretty_print_parse_status(uint32_t parse_status){
       break;
      default:
       fprintf(stdout, "Invalid return code\n");
-  }  
+  }
 }
 
 token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
@@ -69,7 +69,7 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   DEBUG_STDOUT_PRINT("OPP> Lexing...\n")
   perform_lexing(file_name, &ctx);
   portable_clock_gettime(&lex_timer_end);
-  
+
   portable_clock_gettime(&parse_timer_start);
 
   compute_preallocation_sizes(&ctx,threads);
@@ -147,7 +147,7 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   if (threads < num_threads) {
     VERBOSE_PRINT("OPP> creating additional threads, starting from i = %d.\n", i)
     /* Create additional threads depending on mode. */
-#if defined __SINGLE_RECOMBINATION      
+#if defined __SINGLE_RECOMBINATION
       /* Only one iteration. */
       VERBOSE_PRINT("OPP> creating mode ONE thread, i = %d.\n", threads)
       contexts[threads].id = threads;
@@ -300,7 +300,7 @@ void *thread_task(void *worker_thread_ctx)
     thread_context->list_end = thread_arguments[thread_context->parents[thread_context->num_parents - 1]].list_end;
   }
   /* Launch parser. */
-  if (parse_status == __PARSE_IN_PROGRESS) { 
+  if (parse_status == __PARSE_IN_PROGRESS) {
     parse_result = opp_parse(thread_context->c_prev, thread_context->c_next, thread_context->list_begin, thread_context->list_end, thread_context->ctx);
 
     fprintf(stdout, "Pthread %d> result %d\n", thread_context->id, parse_result);
