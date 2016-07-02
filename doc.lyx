@@ -7,7 +7,7 @@
 \textclass article
 \use_default_options true
 \maintain_unincluded_children false
-\language english
+\language bulgarian
 \language_package default
 \inputencoding auto
 \fontencoding global
@@ -27,6 +27,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -57,7 +58,7 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\quotes_language german
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -71,7 +72,19 @@
 \begin_body
 
 \begin_layout Title
-Разпределен калкулатор
+Paracalc: разпределен калкулатор
+\end_layout
+
+\begin_layout Title
+Проект по 
+\begin_inset Quotes gld
+\end_inset
+
+Системи за паралелна обработка
+\begin_inset Quotes grd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Author
@@ -82,6 +95,38 @@
 \begin_layout Date
 2.
  юли 2016 г.
+\end_layout
+
+\begin_layout Part*
+Проект
+\end_layout
+
+\begin_layout Standard
+Това е реализация на 
+\emph on
+parser
+\emph default
+ за прост аритметичен израз, зададен със следната граматика:
+\end_layout
+
+\begin_layout Verbatim
+
+Expression = Term | Expression '+' Term | Expression '-' Term
+\end_layout
+
+\begin_layout Verbatim
+
+Term       = Factor | Term '*' Factor | Term '/' Factor
+\end_layout
+
+\begin_layout Verbatim
+
+Factor     = Number | '(' Expression ')'
+\end_layout
+
+\begin_layout Verbatim
+
+Number     = '0' | [1-9] [0-9]*
 \end_layout
 
 \end_body
