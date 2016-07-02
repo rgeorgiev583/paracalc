@@ -112,7 +112,7 @@ Paracalc
 \end_layout
 
 \begin_layout Date
-2.
+1.
  юли 2016 г.
 \end_layout
 
@@ -411,7 +411,325 @@ parser
 \end_layout
 
 \begin_layout Standard
-С това алгоритъмът покрива изискванията за ефективност на паралелното парсване.
+С това алгоритъмът покрива до голяма степен изискванията за ефективност
+ на паралелното парсване.
+\end_layout
+
+\begin_layout Section*
+Имплементация
+\end_layout
+
+\begin_layout Subsection*
+Архитектура
+\end_layout
+
+\begin_layout Standard
+Тази конкретна имплементация на алгоритъма разчита на стандартния Unix инструмен
+т за създаване на лексикални анализатори 
+\family typewriter
+lex
+\family default
+ (по-конкретно имплементацията му 
+\emph on
+flex
+\emph default
+), както и на собственоръчно написан генератор за парсъри (
+\family typewriter
+parsergen
+\family default
+ в директорията 
+\family typewriter
+gen
+\family default
+) със синтаксис, базиран на синтаксиса на 
+\family typewriter
+yacc
+\family default
+/
+\emph on
+Bison
+\emph default
+.
+ Конкретните файлове със спецификациите са следните:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+lexer/paracalc.l.m4
+\family default
+ ‒ това е скрипт, който при обработка с предпроцесора за макроси 
+\family typewriter
+m4
+\family default
+ генерира спецификацията на лексикалния анализатор, използваща синтаксиса
+ на 
+\emph on
+flex;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+parser/paracalc.g
+\family default
+ ‒ това е граматиката (т.е.
+ спецификацията за генератора на парсъри).
+\end_layout
+
+\begin_layout Standard
+Самият алгоритъм е описан в няколко базови C файла, които се намират в директори
+ята 
+\family typewriter
+src
+\family default
+:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+lex.c
+\family default
+ ‒ отговаря за лексикалния анализ (по-точно функцията 
+\family typewriter
+perform_lexing
+\family default
+);
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+parse.c
+\family default
+ ‒ отговаря за управляването на парсването (т.е.
+ за процеса на парсване: функцията 
+\family typewriter
+parse
+\family default
+); тук се менажират нишките (всяка нишка изпълнява 
+\family typewriter
+thread_task
+\family default
+);
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+opp.c
+\family default
+ ‒ отговаря за преобразуването до обработката на семантичната част на парсването
+ (т.е.
+ същинското парсване);
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+reduction_list.c
+\family default
+, 
+\family typewriter
+token_node.c
+\family default
+, 
+\family typewriter
+vect_stack.c
+\family default
+ ‒ дефинират базови структури от данни, които се ползват при процеса на
+ лексикален анализ и парсване;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+expr_parallel_calc.c
+\family default
+ ‒ в него се намира 
+\family typewriter
+main
+\family default
+ функцията;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+debug_functions.c
+\family default
+ ‒ дефинира функции, които се използват в режим на дебъгване.
+\end_layout
+
+\begin_layout Standard
+Освен това има няколко важни заглавни файла в 
+\family typewriter
+include
+\family default
+ директорията, които трябва да се споменат:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+debug_functions.h
+\family default
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+flex_return_codes.h
+\family default
+ ‒ там са дефинирани кодовете за грешка, които връща инструментът 
+\emph on
+Flex
+\emph default
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+lex.h
+\family default
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+opp.h
+\family default
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+parser.h
+\family default
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+parsing_context.h
+\family default
+ ‒ там е дефинирана структурата 
+\family typewriter
+parsing_ctx
+\family default
+, която държи текущия контекст (т.е.
+ състояние) по време на парсване;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+reduction_list.
+\family default
+h, 
+\family typewriter
+token_node.
+\family default
+h, 
+\family typewriter
+vect_stack.
+\family default
+h;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+timers.h
+\family default
+ ‒ там са дефинирани базови функции за платформено-независимо изчисляване
+ на времеви интервали.
+\end_layout
+
+\begin_layout Standard
+Целият софтуер се 
+\emph on
+build
+\emph default
+-ва с помощта на специално написан 
+\emph on
+Makefile
+\emph default
+.
+\end_layout
+
+\begin_layout Subsection*
+Инсталация
+\end_layout
+
+\begin_layout Standard
+За да 
+\emph on
+build
+\emph default
+-нете софтуера, изпълнете командата 
+\emph on
+make
+\emph default
+ (би трябвало да работи със повечето версии на 
+\emph on
+GNU Make
+\emph default
+/
+\emph on
+BSD Make
+\emph default
+):
+\end_layout
+
+\begin_layout Verbatim
+
+$ make
+\end_layout
+
+\begin_layout Standard
+Изпълнимият файл 
+\family typewriter
+paracalc
+\family default
+ ще се създаде автоматично в директорията 
+\family typewriter
+bin
+\family default
+.
+\end_layout
+
+\begin_layout Subsection*
+Употреба
+\end_layout
+
+\begin_layout Verbatim
+
+$ ./paracalc [-j threads] [-o output_filename] [-q] filename
+\end_layout
+
+\begin_layout Standard
+където 
+\emph on
+threads
+\emph default
+ е броят нишки, които да се пуснат (може да се пропусне), 
+\emph on
+output_filename
+\emph default
+ е името на файла, в който да се запише резултатът (може да се пропусне),
+ и 
+\family typewriter
+-q
+\family default
+ потиска извеждането на почти всичко освен общото време за изпълнение и
+ резултата.
 \end_layout
 
 \end_body
