@@ -36,3 +36,6 @@
 
 # Binaries directory
 /bin/
+
+# LyX temporary files
+*.lyx~
