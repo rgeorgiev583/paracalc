@@ -321,7 +321,7 @@ void *thread_task(void *worker_thread_ctx)
   }
   portable_clock_gettime(&thread_timer_end);
   thread_time = compute_time_interval(&thread_timer_start, &thread_timer_end);
-  VERBOSE_PRINT("Pthread %d> execution time was %lf ms\n", thread_time * 1000);
+  VERBOSE_PRINT("Pthread %d> execution time was %lf ms\n", thread_context->id, thread_time * 1000)
   pthread_exit(NULL);
 }
 
