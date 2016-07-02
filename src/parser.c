@@ -304,7 +304,7 @@ void *thread_task(void *worker_thread_ctx)
   if (parse_status == __PARSE_IN_PROGRESS) {
     parse_result = opp_parse(thread_context->c_prev, thread_context->c_next, thread_context->list_begin, thread_context->list_end, thread_context->ctx);
 
-    fprintf(stdout, "Pthread %d> result %d\n", thread_context->id, parse_result);
+    VERBOSE_PRINT("Pthread %d> result %d\n", thread_context->id, parse_result)
     thread_context->results[thread_context->id] = parse_result;
 
 #ifdef __DEBUG
