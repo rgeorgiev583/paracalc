@@ -508,13 +508,12 @@ parse.c
 \family typewriter
 parse
 \family default
-); тук се менажират нишките (всяка нишка изпълнява 
+); тук се създават и управляват нишките (всяка нишка изпълнява 
 \family typewriter
 thread_task
 \family default
 ).
- Самият механизъм, който е използван за създаване и управление на нишки,
- е 
+ Самият механизъм, който е използван за реализиране на паралелизъм, е 
 \emph on
 OpenMP
 \emph default
@@ -755,6 +754,7 @@ output_filename
 \begin_layout Plain Layout
 
 \series bold
+\size scriptsize
 Брой нишки
 \end_layout
 
@@ -766,6 +766,7 @@ output_filename
 \begin_layout Plain Layout
 
 \series bold
+\size scriptsize
 Време за лексикален анализ (
 \emph on
 ms
@@ -781,6 +782,7 @@ ms
 \begin_layout Plain Layout
 
 \series bold
+\size scriptsize
 Време за парсване (
 \emph on
 ms
@@ -796,6 +798,7 @@ ms
 \begin_layout Plain Layout
 
 \series bold
+\size scriptsize
 Общо време (
 \emph on
 ms
@@ -811,6 +814,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 1
 \end_layout
 
@@ -820,6 +825,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 10290.781728
 \end_layout
 
@@ -829,6 +836,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17945.963957
 \end_layout
 
@@ -838,6 +847,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 28236.745685
 \end_layout
 
@@ -849,6 +860,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 2
 \end_layout
 
@@ -858,6 +871,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9688.815649
 \end_layout
 
@@ -867,6 +882,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17136.798029
 \end_layout
 
@@ -876,6 +893,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 26825.613678
 \end_layout
 
@@ -887,6 +906,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 3
 \end_layout
 
@@ -896,6 +917,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9893.138364
 \end_layout
 
@@ -905,6 +928,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17283.407232
 \end_layout
 
@@ -914,6 +939,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27176.545596
 \end_layout
 
@@ -925,6 +952,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 4
 \end_layout
 
@@ -934,6 +963,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9656.216076
 \end_layout
 
@@ -943,6 +974,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17224.419706
 \end_layout
 
@@ -952,6 +985,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 26880.635782
 \end_layout
 
@@ -963,6 +998,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 5
 \end_layout
 
@@ -972,6 +1009,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9845.111727
 \end_layout
 
@@ -981,6 +1020,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17241.839613
 \end_layout
 
@@ -990,6 +1031,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27086.951340
 \end_layout
 
@@ -1001,6 +1044,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 6
 \end_layout
 
@@ -1010,6 +1055,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9656.521882
 \end_layout
 
@@ -1019,6 +1066,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17554.116244
 \end_layout
 
@@ -1028,6 +1077,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27210.638126
 \end_layout
 
@@ -1039,6 +1090,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 7
 \end_layout
 
@@ -1048,6 +1101,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9688.695327
 \end_layout
 
@@ -1057,6 +1112,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17211.345622
 \end_layout
 
@@ -1066,6 +1123,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 26900.040949
 \end_layout
 
@@ -1077,6 +1136,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 8
 \end_layout
 
@@ -1086,6 +1147,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9669.590845
 \end_layout
 
@@ -1095,6 +1158,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17846.559005
 \end_layout
 
@@ -1104,6 +1169,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27516.149850
 \end_layout
 
@@ -1115,6 +1182,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9
 \end_layout
 
@@ -1124,6 +1193,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9866.888565
 \end_layout
 
@@ -1133,6 +1204,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17771.716818
 \end_layout
 
@@ -1142,6 +1215,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27638.605383
 \end_layout
 
@@ -1153,6 +1228,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 10
 \end_layout
 
@@ -1162,6 +1239,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9694.934786
 \end_layout
 
@@ -1171,6 +1250,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17925.423752
 \end_layout
 
@@ -1180,6 +1261,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27620.358538
 \end_layout
 
@@ -1191,6 +1274,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 11
 \end_layout
 
@@ -1200,6 +1285,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9649.756515
 \end_layout
 
@@ -1209,6 +1296,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17342.307615
 \end_layout
 
@@ -1218,6 +1307,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 26992.064130
 \end_layout
 
@@ -1229,6 +1320,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 12
 \end_layout
 
@@ -1238,6 +1331,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9845.757591
 \end_layout
 
@@ -1247,6 +1342,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17781.824748
 \end_layout
 
@@ -1256,6 +1353,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27627.582339
 \end_layout
 
@@ -1267,6 +1366,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 13
 \end_layout
 
@@ -1276,6 +1377,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9767.112981
 \end_layout
 
@@ -1285,6 +1388,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17403.409597
 \end_layout
 
@@ -1294,6 +1399,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27170.522578
 \end_layout
 
@@ -1305,6 +1412,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 14
 \end_layout
 
@@ -1314,6 +1423,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9915.506494
 \end_layout
 
@@ -1323,6 +1434,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 18158.555230
 \end_layout
 
@@ -1332,6 +1445,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 28074.061724
 \end_layout
 
@@ -1343,6 +1458,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 15
 \end_layout
 
@@ -1352,6 +1469,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 9682.353990
 \end_layout
 
@@ -1361,6 +1480,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 17838.187585
 \end_layout
 
@@ -1370,6 +1491,8 @@ ms
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 27520.541575
 \end_layout
 
@@ -1388,6 +1511,7 @@ ms
 	template PDFPages
 	filename data.pdf
 	extra LaTeX "pages=-"
+	scale 80
 
 \end_inset
 
