@@ -71,7 +71,7 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   compute_preallocation_sizes(&ctx,threads);
   bounds = compute_bounds(ctx.token_list_length, threads, ctx.token_list);
 
-  VERBOSE_PRINT("OPP> Number of threads used in the current run: %d\n", threads)
+  VERBOSE_PRINT("OPP> Number of threads used in the current run: %d.\n", threads)
 
   omp_set_dynamic(0);               // Explicitly disable dynamic teams
   omp_set_num_threads(threads + 1); // Use `threads` threads for all consecutive parallel regions
@@ -97,31 +97,31 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
     /* Set list_begin. */
     if (i == 0) {
       contexts[i].list_begin = bounds[i];
-      VERBOSE_PRINT("OPP> list begin first thread %s\n", gr_token_to_string(bounds[i]->token));
+      DEBUG_STDOUT_PRINT("OPP> list begin first thread %s\n", gr_token_to_string(bounds[i]->token));
     } else {
       list_ptr = bounds[i]->next;
       contexts[i].list_begin = list_ptr;
-      VERBOSE_PRINT("OPP> list begin thread %d is %s\n", i, gr_token_to_string(list_ptr->token));
+      DEBUG_STDOUT_PRINT("OPP> list begin thread %d is %s\n", i, gr_token_to_string(list_ptr->token));
     }
     /* Get prev context. */
     if (i == 0) {
       l_token = new_token_node(__TERM, NULL);
-      VERBOSE_PRINT("OPP> c_prev context thread %d is __TERM\n", i);
+      DEBUG_STDOUT_PRINT("OPP> c_prev context thread %d is __TERM\n", i);
     } else {
       list_ptr = bounds[i];
       l_token = new_token_node(list_ptr->token, NULL);
-      VERBOSE_PRINT("OPP> c_prev context thread %d is %s\n", i, gr_token_to_string(list_ptr->token));
+      DEBUG_STDOUT_PRINT("OPP> c_prev context thread %d is %s\n", i, gr_token_to_string(list_ptr->token));
     }
     l_token->next = contexts[i].list_begin;
     contexts[i].c_prev = l_token;
     /* Get next context. */
     if (i == threads - 1) {
       l_token = new_token_node(__TERM, NULL);
-      VERBOSE_PRINT("OPP> c_next context thread %d is __TERM\n", i);
+      DEBUG_STDOUT_PRINT("OPP> c_next context thread %d is __TERM\n", i);
     } else {
       list_ptr = bounds[i + 1]->next;
       l_token = new_token_node(list_ptr->token, NULL);
-      VERBOSE_PRINT("OPP> c_next context thread %d is %s\n", i, gr_token_to_string(list_ptr->token));
+      DEBUG_STDOUT_PRINT("OPP> c_next context thread %d is %s\n", i, gr_token_to_string(list_ptr->token));
     }
     contexts[i].c_next = l_token;
     /* Set list end. */
@@ -239,9 +239,9 @@ void thread_task(thread_shared_t* thread_shared, thread_context_t* thread_contex
     parse_result = opp_parse(thread_context->c_prev, thread_context->c_next, thread_context->list_begin, thread_context->list_end, thread_shared->ctx);
 
   if (thread_context->num_parents > 0)
-    VERBOSE_PRINT("Main routine> result %d\n", parse_result)
+    VERBOSE_PRINT("Main routine> Returned result %d.\n", parse_result)
   else
-    VERBOSE_PRINT("Thread %d> result %d\n", thread_context->id, parse_result)
+    VERBOSE_PRINT("Thread %d> Returned result %d.\n", thread_context->id, parse_result)
   thread_shared->results[thread_context->id] = parse_result;
 
 #ifdef __DEBUG
@@ -256,8 +256,8 @@ void thread_task(thread_shared_t* thread_shared, thread_context_t* thread_contex
   portable_clock_gettime(&thread_timer_end);
   thread_time = compute_time_interval(&thread_timer_start, &thread_timer_end);
   if (thread_context->num_parents > 0)
-    VERBOSE_PRINT("Main routine> execution time was %lf ms\n", thread_time * 1000)
+    VERBOSE_PRINT("Main routine> Execution time was %lf ms.\n", thread_time * 1000)
   else
-    VERBOSE_PRINT("Thread %d> execution time was %lf ms\n", thread_context->id, thread_time * 1000)
+    VERBOSE_PRINT("Thread %d> Execution time was %lf ms.\n", thread_context->id, thread_time * 1000)
 }
 
