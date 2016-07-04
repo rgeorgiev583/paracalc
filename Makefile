@@ -30,14 +30,14 @@ OBJ := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
 .PHONY: all gen clean clean-gen wipe
 
 all: gen $(GENSRC) $(FOBJ) $(GENOBJ) $(OBJ)
-	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	@[ -d $(BINDIR) ] || mkdir $(BINDIR)
 	$(CC) $(LDFLAGS) $(FOBJ) $(GENOBJ) $(OBJ) -o $(BINDIR)/$(NAME)
 
 gen: $(GENDIR)/parsergen
 	$(GENDIR)/parsergen -i $(PARDIR)/$(NAME).g --out_header $(INCDIR)/ --out_core $(SRCDIR)/
 
 $(FOBJ): $(FOUT)
-	[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
+	@[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(FOUT): $(FLEX)
@@ -47,7 +47,7 @@ $(FLEX): $(FLEX).m4
 	m4 $< > $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
+	@[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
