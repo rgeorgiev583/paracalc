@@ -1,4 +1,4 @@
-#include <pthread.h>
+#include <omp.h>
 #include "parser.h"
 #include "timers.h"
 
@@ -42,19 +42,15 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
 {
   uint32_t i, parse_status;
   uint32_t step_size, step_index;
-  int32_t num_threads;
   uint8_t *results;
   parsing_ctx ctx;
   token_node **bounds;
   token_node *list_ptr;
   token_node *l_token = NULL;
-  pthread_t *thread;
+  thread_shared_t shared;
   thread_context_t *contexts;
   struct timespec parse_timer_start, parse_timer_end, lex_timer_start, lex_timer_end;
   double lexing_time, parsing_time, total_time;
-#if defined __LOG_RECOMBINATION
-  uint32_t j;
-#endif
   /* Redirect stderr. */
 #ifdef __DEBUG
   if (freopen("DEBUG", "w", stderr) == NULL) {
@@ -75,27 +71,21 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
   compute_preallocation_sizes(&ctx,threads);
   bounds = compute_bounds(ctx.token_list_length, threads, ctx.token_list);
 
-  /* Compute number of threads based on mode. */
-  num_threads = threads;
-  if (threads > 1) {
-#if defined __SINGLE_RECOMBINATION
-    ++num_threads;
-#elif defined __LOG_RECOMBINATION
-    num_threads = num_threads*2 -__builtin_popcount(num_threads);
-#else
-#error "Chunk recombination strategy undefined, define it in config.h"
-#endif
-  }
-  VERBOSE_PRINT("OPP> Number of threads used in the current run: %d\n", num_threads)
+  VERBOSE_PRINT("OPP> Number of threads used in the current run: %d\n", threads)
+
+  omp_set_dynamic(0);               // Explicitly disable dynamic teams
+  omp_set_num_threads(threads + 1); // Use `threads` threads for all consecutive parallel regions
 
   /* Allocate threads. */
-  contexts = (thread_context_t *) malloc(sizeof(thread_context_t) * num_threads);
-  thread = (pthread_t *) malloc(sizeof(pthread_t)*num_threads);
-  results = (uint8_t *) malloc(sizeof(uint8_t)*num_threads);
-  if (thread == NULL || contexts == NULL || results == NULL) {
-    VERBOSE_PRINT("ERROR> Thread allocation failed!\n")
+  contexts = (thread_context_t *) malloc(sizeof(thread_context_t) * (threads + 1));
+  results = (uint8_t *) malloc(sizeof(uint8_t)*(threads + 1));
+  if (contexts == NULL || results == NULL) {
+      VERBOSE_PRINT("ERROR> Thread allocation failed!\n")
       return NULL;
   }
+  shared.args = contexts;
+  shared.results = results;
+  shared.ctx = &ctx;
 
   /* Create and launch threads. */
   step_size = threads;
@@ -137,75 +127,18 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
     /* Set list end. */
     contexts[i].list_end = (i + 1 < threads ? bounds[i + 1]->next : NULL);
     contexts[i].num_parents = 0;
-    contexts[i].threads = thread;
-    contexts[i].args = contexts;
-    contexts[i].results = results;
-    contexts[i].ctx = &ctx;
-    pthread_create(&thread[i], NULL, thread_task, (void *)&contexts[i]);
+    #pragma omp parallel
+    #pragma omp single nowait
+    #pragma omp task shared(shared)
+    thread_task(&shared, &contexts[i]);
   }
 
-  if (threads < num_threads) {
-    VERBOSE_PRINT("OPP> Creating additional threads, starting from i = %d.\n", i)
-    /* Create additional threads depending on mode. */
-#if defined __SINGLE_RECOMBINATION
-      /* Only one iteration. */
-      VERBOSE_PRINT("OPP> Creating mode ONE thread, i = %d.\n", threads)
-      contexts[threads].id = threads;
-      contexts[threads].parents = (int16_t *) malloc(sizeof(int16_t)*threads);
-      contexts[threads].c_prev = contexts[0].c_prev;
-      for (i = 0; i < threads; ++i) {
-        contexts[threads].parents[i] = i;
-      }
-      contexts[threads].c_next = contexts[i - 1].c_next;
-      contexts[threads].num_parents = threads;
-      contexts[threads].threads = thread;
-      contexts[threads].args = contexts;
-      contexts[threads].results = results;
-      contexts[threads].ctx = &ctx;
-      pthread_create(&thread[threads], NULL, thread_task, (void *)&contexts[threads]);
-#elif defined __LOG_RECOMBINATION
-      unsigned int step_first_index = 0;
-      step_size /= 2;
-      VERBOSE_PRINT("OPP> Creating mode LOG threads.\n")
-      /* Create different iterations. */
-      for (; i < num_threads; ++i) {
-        VERBOSE_PRINT("OPP> Creating thread %d, with step index %d and step size %d.\n", i, step_index, step_size)
-        contexts[i].id = i;
-        contexts[i].c_prev = contexts[step_first_index + step_index*2].c_prev;
-        if (step_index == step_size - 1) {
-          contexts[i].num_parents = i - step_index*3 - step_first_index;
-          contexts[i].parents = (int16_t *) malloc(sizeof(int16_t)*contexts[i].num_parents);
-          for (j = 0; j < contexts[i].num_parents; ++j) {
-            contexts[i].parents[j] = step_first_index + step_index*2 + j;
-          }
-        } else {
-          contexts[i].num_parents = 2;
-          contexts[i].parents = (int16_t *) malloc(sizeof(int16_t)*2);
-          contexts[i].parents[0] = step_first_index + step_index*2;
-          contexts[i].parents[1] = step_first_index + step_index*2 + 1;
-        }
-        contexts[i].c_next = contexts[contexts[i].parents[contexts[i].num_parents - 1]].c_next;
-        contexts[i].threads = thread;
-        contexts[i].args = contexts;
-        contexts[i].results = results;
-        contexts[i].ctx = &ctx;
-        pthread_create(&thread[i], NULL, thread_task, (void *)&contexts[i]);
-        ++step_index;
-        if (step_index >= step_size) {
-          step_first_index = i - step_size + 1;
-          step_index = 0;
-          step_size /= 2;
-        }
-      }
-#else
-#error "Chunk recombination strategy undefined, define it in config.h"
-#endif
-  }
-
-  /* Wait for last thread to finish. */
-  VERBOSE_PRINT("OPP> Waiting for thread %d to finish.\n", num_threads - 1)
-  pthread_join(thread[num_threads - 1], NULL);
-  parse_status = results[num_threads - 1];
+  contexts[threads].id = threads;
+  contexts[threads].c_prev = contexts[0].c_prev;
+  contexts[threads].c_next = contexts[i - 1].c_next;
+  contexts[threads].num_parents = threads;
+  thread_task(&shared, &contexts[threads]);
+  parse_status = results[threads];
 
   /* Free threads and arguments. */
   VERBOSE_PRINT("OPP> Freeing threads.\n")
@@ -213,7 +146,6 @@ token_node *parse(int32_t threads, int32_t lex_thread_max_num, char *file_name)
     free(contexts[i].c_prev);
     free(contexts[i].c_next);
   }
-  free(thread);
 
   // clock_gettime(CLOCK_REALTIME, &timer_r);
   portable_clock_gettime(&parse_timer_end);
@@ -262,66 +194,70 @@ token_node **compute_bounds(uint32_t length, uint8_t n, token_node *token_list)
 }
 
 
-void *thread_task(void *worker_thread_ctx)
+void thread_task(thread_shared_t* thread_shared, thread_context_t* thread_context)
 {
   struct timespec thread_timer_start, thread_timer_end;
   double thread_time;
   portable_clock_gettime(&thread_timer_start);
-  thread_context_t *thread_context, *thread_arguments;
+  thread_context_t *thread_arguments;
   uint32_t parse_result,i;
   uint32_t parent_index;
   token_node *list_ptr;
   uint32_t parse_status = __PARSE_IN_PROGRESS;
 
-  thread_context = (thread_context_t*) worker_thread_ctx;
-  thread_arguments = thread_context->args;
+  thread_arguments = thread_shared->args;
   if (thread_context->num_parents > 0) {
     /* Wait for parent threads to finish. */
+    #pragma omp taskwait
     for (i = 0; i < thread_context->num_parents; ++i) {
-      pthread_join(thread_context->threads[thread_context->parents[i]], NULL);
-      parse_status = thread_context->results[thread_context->parents[i]];
+      parse_status = thread_shared->results[i];
       if (parse_status != __PARSE_IN_PROGRESS) {
         break;
       }
     }
     /* Join subtrees. */
     for (i = 0; i < thread_context->num_parents; ++i) {
-      parent_index = thread_context->parents[i];
+      parent_index = i;
       list_ptr = thread_arguments[parent_index].c_prev;
       while (list_ptr->parent != NULL) {
         list_ptr = list_ptr->parent;
       }
-      if (list_ptr != thread_context->ctx->token_list) {
+      if (list_ptr != thread_shared->ctx->token_list) {
         list_ptr->next = thread_arguments[parent_index].c_prev->next;
       }
     }
     /* Get list_begin and list_end. */
-    list_ptr = thread_arguments[thread_context->parents[0]].list_begin;
+    list_ptr = thread_arguments[0].list_begin;
     while (list_ptr->parent != NULL) {
       list_ptr = list_ptr->parent;
     }
     thread_context->list_begin = list_ptr;
-    thread_context->list_end = thread_arguments[thread_context->parents[thread_context->num_parents - 1]].list_end;
+    thread_context->list_end = thread_arguments[thread_context->num_parents - 1].list_end;
   }
   /* Launch parser. */
   if (parse_status == __PARSE_IN_PROGRESS) {
-    parse_result = opp_parse(thread_context->c_prev, thread_context->c_next, thread_context->list_begin, thread_context->list_end, thread_context->ctx);
+    parse_result = opp_parse(thread_context->c_prev, thread_context->c_next, thread_context->list_begin, thread_context->list_end, thread_shared->ctx);
 
-    VERBOSE_PRINT("Pthread %d> result %d\n", thread_context->id, parse_result)
-    thread_context->results[thread_context->id] = parse_result;
+  if (thread_context->num_parents > 0)
+    VERBOSE_PRINT("Main routine> result %d\n", parse_result)
+  else
+    VERBOSE_PRINT("Thread %d> result %d\n", thread_context->id, parse_result)
+  thread_shared->results[thread_context->id] = parse_result;
 
 #ifdef __DEBUG
     if (parse_result== 0) {
-      PRINT_TOKEN_NODE_TREE(thread_context->ctx, 0, thread_context->ctx->token_list)
+      PRINT_TOKEN_NODE_TREE(thread_shared->ctx, 0, thread_shared->ctx->token_list)
     }
 #endif
 
   } else {
-    thread_context->results[thread_context->id] = parse_status;
+    thread_shared->results[thread_context->id] = parse_status;
   }
   portable_clock_gettime(&thread_timer_end);
   thread_time = compute_time_interval(&thread_timer_start, &thread_timer_end);
-  VERBOSE_PRINT("Pthread %d> execution time was %lf ms\n", thread_context->id, thread_time * 1000)
-  pthread_exit(NULL);
+  if (thread_context->num_parents > 0)
+    VERBOSE_PRINT("Main routine> execution time was %lf ms\n", thread_time * 1000)
+  else
+    VERBOSE_PRINT("Thread %d> execution time was %lf ms\n", thread_context->id, thread_time * 1000)
 }
 

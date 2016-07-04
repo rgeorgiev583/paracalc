@@ -9,14 +9,14 @@ OBJDIR := obj
 BINDIR := bin
 
 INCLUDE := -I./$(INCDIR) -I./$(LEXDIR)
-CFLAGS := -O3 -pipe -UDEBUG -Wall $(INCLUDE)
+CFLAGS := -fopenmp -O3 -pipe -UDEBUG -Wall $(INCLUDE)
 ifneq ($(strip $(DEBUG)),)
 	CFLAGS += -D__DEBUG -g
 endif
 ifeq ($(strip $(SILENT)),)
 	CFLAGS += -D__VERBOSE
 endif
-LDFLAGS := -lrt -lpthread -lgmp
+LDFLAGS := -lrt -lpthread -lgmp -lgomp
 
 GENINC := $(INCDIR)/config.h $(INCDIR)/equivalence_matrix.h $(INCDIR)/grammar.h $(INCDIR)/grammar_semantics.h $(INCDIR)/grammar_tokens.h $(INCDIR)/matrix.h $(INCDIR)/reduction_tree.h $(INCDIR)/rewrite_rules.h
 GENSRC := $(SRCDIR)/grammar.c $(SRCDIR)/grammar_semantics.c

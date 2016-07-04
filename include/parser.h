@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <pthread.h>
 
 #include "config.h"
 
@@ -17,20 +16,21 @@
 #include "lex.h"
 typedef struct thread_context_t{
   uint8_t id;
-  int16_t *parents;
   uint16_t num_parents;
-  uint8_t *results;
   token_node *list_begin;
   token_node *list_end;
   token_node *c_prev;
   token_node *c_next;
-  parsing_ctx *ctx;
-  pthread_t *threads;
-  struct thread_context_t *args;
 } thread_context_t;
+
+typedef struct thread_shared_t{
+  uint8_t *results;
+  parsing_ctx *ctx;
+  struct thread_context_t *args;
+} thread_shared_t;
 
 token_node *parse(int32_t threads,int32_t lex_thread_max_num, char *file_name);
 void init_offline_structures(parsing_ctx *ctx);
 token_node **compute_bounds(uint32_t length, uint8_t n, token_node *token_list);
-void *thread_task(void *arg);
+void thread_task(thread_shared_t* thread_shared, thread_context_t* thread_context);
 #endif
