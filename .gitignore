@@ -40,3 +40,12 @@
 # LyX temporary files
 *.lyx~
 *.lyx#
+
+# Generated documentation files
+*.pdf
+*.html
+*.png
+
+# RStudio files
+.RData
+.Rhistory
